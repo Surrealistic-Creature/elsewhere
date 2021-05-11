@@ -1,11 +1,17 @@
+# -*- coding: utf-8 -*-
+
+
 import uvicorn
 from motor.motor_asyncio import AsyncIOMotorClient
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
-from starlette.routing import Route
+from starlette.routing import Route, Mount
+from starlette.templating import Jinja2Templates
+from starlette.staticfiles import StaticFiles
 
 import database
 
+templates = Jinja2Templates(directory='templates')
 
 async def init_db():
     client = AsyncIOMotorClient('mongodb://localhost:27017')
@@ -14,12 +20,14 @@ async def init_db():
 
 async def homepage(request):
     await database.insertion(request.app.state.db)
-    return JSONResponse({'hello': 'world'})
+    return templates.TemplateResponse('index.html', {'request' : request})
 
 
-app = Starlette(debug=True, routes=[
-    Route('/', homepage),
-], on_startup=[init_db])
+routes = [
+        Route('/', endpoint=homepage),
+        Mount('/static', StaticFiles(directory='static'), name='static')]
+
+app = Starlette(debug=True, routes=routes, on_startup=[init_db])
 
 
 if __name__ == '__main__':
