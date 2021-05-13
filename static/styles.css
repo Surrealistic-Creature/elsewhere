@@ -1,0 +1,54 @@
+.header {
+	text-align: center;
+	color: #aa3535;
+	background-color: #d5a54a;
+}
+
+.qouter {
+	text-align: left;
+	color: #208cb0;
+	background-color: #f9f1f4;
+	height: 3em;
+	width: 75%;
+	border-bottom-left-radius: 30px;
+	border-top-left-radius: 30px;
+	padding-block: 25px;
+	padding-left: 30px;
+	position: absolute;
+	right: -39px;
+}
+
+.dbreq {
+	position: absolute;
+	top: 30%;
+	margin-left: 100px;
+	background-color: #dbadad;
+	width: 700px;
+	height: 50px;
+	border-radius: 40px;
+}
+
+.send_some {
+	width: 70%;
+	height: 35px;
+	border-radius: 50px;
+	border-style: none;
+	background-color: #d7fddf;
+	position: relative;
+	text-align: center;
+	font-size: 16px;
+	margin-left: 1%;
+	margin-top: 1%;
+
+}
+
+.submit_button {
+	position: relative;
+	background-color: #b5b5fd;
+	border-style: none;
+	border-radius: 40px;
+	margin-left: 3%;
+	height: 35px;
+	font-size: 16px;
+	width: 20%;
+}
