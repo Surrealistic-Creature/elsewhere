@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 import uvicorn
 from motor.motor_asyncio import AsyncIOMotorClient
 from starlette.applications import Starlette
@@ -20,29 +19,23 @@ async def init_db():
     client = AsyncIOMotorClient('mongodb://localhost:27017')
     app.state.db = client.others
 
-
-
 async def homepage(request):
     await database.insertion(request.app.state.db)
     return templates.TemplateResponse('index.html', {'request' : request})
-
 
 async def websocket_endpoint(websocket):
     await websocket.accept()
     await websocket.send_text('Hello, websocket!')
     while True:
         hello = await websocket.receive_text()
-        print(ast)
-    await websocket.close()
+        print(hello)
 
 routes = [
         Route('/', endpoint=homepage),
         WebSocketRoute('/ws', websocket_endpoint),
         Mount('/static', StaticFiles(directory='static'), name='static')]
 
-
 app = Starlette(debug=True, routes=routes, on_startup=[init_db])
-
 
 if __name__ == '__main__':
     uvicorn.run(app, host='0.0.0.0', port=8000, loop='uvloop')
