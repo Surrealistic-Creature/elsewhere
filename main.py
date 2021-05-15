@@ -27,8 +27,12 @@ async def websocket_endpoint(websocket):
     await websocket.accept()
     await websocket.send_text('Hello, websocket!')
     while True:
-        hello = await websocket.receive_text()
-        print(hello)
+        try:
+            hello = await websocket.receive_text()
+            print(hello)
+        except Exception:
+            print('here')
+            break
 
 routes = [
         Route('/', endpoint=homepage),
