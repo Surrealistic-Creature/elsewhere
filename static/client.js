@@ -7,19 +7,8 @@ document.forms.sender.onsubmit = function() {
 	return false;
 };
 
-//socket.onmessage = function(event) {
-//	var incomingMessage = event.data;
-//	showMessage(incomingMessage);
-//};
-
 socket.onmessage = function(event) {
   let message = event.data;
-
-//function showMessage(message) {
-//  var messageElem = document.createElement('div');
-//  messageElem.appendChild(document.createTextNode(message));
-//  document.getElementById('subscribe').appendChild(messageElem);
-//}
 
   let messageElem = document.createElement('div');
   messageElem.textContent = message;
