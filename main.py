@@ -23,7 +23,6 @@ async def homepage(request):
     return templates.TemplateResponse('index.html', {'request' : request})
 
 async def websocket_endpoint(websocket):
-    print(dir(websocket))
     await websocket.accept()
     hello = await database.outload(websocket.app.state.db)
     await websocket.send_json(hello)
