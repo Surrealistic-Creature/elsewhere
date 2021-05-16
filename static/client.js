@@ -9,8 +9,10 @@ document.forms.sender.onsubmit = function() {
 
 socket.onmessage = function(event) {
   let message = event.data;
+  message = JSON.parse(message);
 
-  let messageElem = document.createElement('div');
+  let messageElem = document.createElement('p');
   messageElem.textContent = message;
-  document.getElementById('messages').prepend(messageElem);
+  messageElem.classList.add('ws_msg');
+  document.getElementById('ws_block').prepend(messageElem);
 }

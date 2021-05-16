@@ -10,7 +10,6 @@ from jinja2 import Environment, PackageLoader, select_autoescape
 from starlette.staticfiles import StaticFiles
 from starlette.websockets import WebSocket
 from starlette.endpoints import HTTPEndpoint, WebSocketEndpoint
-
 import database
 
 templates = Jinja2Templates(directory='templates')
@@ -24,8 +23,11 @@ async def homepage(request):
     return templates.TemplateResponse('index.html', {'request' : request})
 
 async def websocket_endpoint(websocket):
+    print(dir(websocket))
     await websocket.accept()
-    await websocket.send_text('Hello, websocket!')
+    hello = await database.outload(websocket.app.state.db)
+    #print(hello)
+    await websocket.send_json(hello)
     while True:
         try:
             hello = await websocket.receive_text()
@@ -34,8 +36,14 @@ async def websocket_endpoint(websocket):
             print('here')
             break
 
+async def outload_endp(request):
+    await database.outload(request.app.state.db)
+    return templates.TemplateResponse('index.html', {'request' : request})
+ 
+
 routes = [
         Route('/', endpoint=homepage),
+        Route('/outload', endpoint=outload_endp),
         WebSocketRoute('/ws', websocket_endpoint),
         Mount('/static', StaticFiles(directory='static'), name='static')]
 
