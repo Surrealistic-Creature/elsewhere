@@ -26,7 +26,6 @@ async def websocket_endpoint(websocket):
     print(dir(websocket))
     await websocket.accept()
     hello = await database.outload(websocket.app.state.db)
-    #print(hello)
     await websocket.send_json(hello)
     while True:
         try:

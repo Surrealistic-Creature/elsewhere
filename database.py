@@ -10,10 +10,5 @@ async def outload(db):
     document = db.information.find({})
     test = await document.to_list(length=10)
     for element in test:
-        element['_id'] = str(element['_id'])
- 
-    #print('test outload', test)
+        element['_id'] = str(element['_id']) 
     return test 
-    #for data in await document.to_list(length=10):
-        #print('from db outload', data)
-        #return test
