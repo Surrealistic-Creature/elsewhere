@@ -13,6 +13,8 @@ motor = "*"
 uvicorn = "*"
 uvloop = "*"
 websockets = "*"
+requests = "*"
+vk-api = "*"
 
 [packages.starlette]
 extras = [ "full",]
