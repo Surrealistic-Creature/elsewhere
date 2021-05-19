@@ -12,6 +12,7 @@ from starlette.websockets import WebSocket
 from starlette.endpoints import HTTPEndpoint, WebSocketEndpoint
 import database
 
+
 templates = Jinja2Templates(directory='templates')
 
 async def init_db():
@@ -19,29 +20,30 @@ async def init_db():
     app.state.db = client.others
 
 async def homepage(request):
-    await database.insertion(request.app.state.db)
+    #await database.add_document(request.app.state.db)
     return templates.TemplateResponse('index.html', {'request' : request})
 
 async def websocket_endpoint(websocket):
     await websocket.accept()
     hello = await database.outload(websocket.app.state.db)
+    count = await database.do_count(websocket.app.state.db)
     await websocket.send_json(hello)
     while True:
         try:
             hello = await websocket.receive_text()
-            print(hello)
+            print(hello, count)
         except Exception:
             print('here')
             break
 
-async def outload_endp(request):
-    await database.outload(request.app.state.db)
-    return templates.TemplateResponse('index.html', {'request' : request})
+
+#async def outload_endp(request):
+#    await database.outload(request.app.state.db)
+#    return templates.TemplateResponse('index.html', {'request' : request})
  
 
 routes = [
         Route('/', endpoint=homepage),
-        Route('/outload', endpoint=outload_endp),
         WebSocketRoute('/ws', websocket_endpoint),
         Mount('/static', StaticFiles(directory='static'), name='static')]
 
