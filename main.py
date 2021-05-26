@@ -20,7 +20,6 @@ async def init_db():
     app.state.db = client.others
 
 async def homepage(request):
-    #await database.add_document(request.app.state.db)
     return templates.TemplateResponse('index.html', {'request' : request})
 
 async def websocket_endpoint(websocket):
@@ -31,16 +30,11 @@ async def websocket_endpoint(websocket):
     while True:
         try:
             hello = await websocket.receive_text()
-            print(hello, count)
+            print(hello)
         except Exception:
             print('here')
             break
 
-
-#async def outload_endp(request):
-#    await database.outload(request.app.state.db)
-#    return templates.TemplateResponse('index.html', {'request' : request})
- 
 
 routes = [
         Route('/', endpoint=homepage),
