@@ -25,19 +25,42 @@ async def homepage(request):
 async def websocket_endpoint(websocket):
     await websocket.accept()
     hello = await database.outload(websocket.app.state.db)
-    count = await database.do_count(websocket.app.state.db)
+    count = await database.do_count_docs(websocket.app.state.db)
     await websocket.send_json(hello)
     while True:
         try:
-            hello = await websocket.receive_text()
-            print(hello)
+            hell = await websocket.receive_text()
+            print('hello there', hello)
         except Exception:
             print('here')
             break
 
+async def show_people(request):
+    show = await database.print_people(request.app.state.db)
+    print(show)
+    return JSONResponse({'message': 'ok'}) 
+
+
+async def remove_docs(request):
+    await database.del_many(request.app.state.db)
+    return JSONResponse({'message': 'ok'})
+
+
+
+async def vk_connect(request):
+    await database.add_document(request.app.state.db)
+    return JSONResponse({'message': 'ok'})
+
+async def pushing_people(request):
+    await database.split_doc(request.app.state.db)
+    return JSONResponse({'message': 'ok'})
 
 routes = [
         Route('/', endpoint=homepage),
+        Route('/vk_connect', endpoint=vk_connect),
+        Route('/psh', endpoint=pushing_people),
+        Route('/rm_docs', endpoint=remove_docs),
+        Route('/show', endpoint=show_people),
         WebSocketRoute('/ws', websocket_endpoint),
         Mount('/static', StaticFiles(directory='static'), name='static')]
 

@@ -12,18 +12,34 @@ async def outload(db):
     test = await document.to_list(length=100)
     for element in test:
         element['_id'] = str(element['_id'])
+        #print(test)
     return test
 
-async def do_count(db):
+async def print_people(db):
+    doc_people = db.people.find({})
+    press = await doc_people.to_list(length=3)
+    for element in press:
+        element['_id'] = str(element['_id'])
+    return press
+
+async def do_count_docs(db):
     n = await db.information.count_documents({})
     print('%s docs in collection' % n)
+    h = await db.people.count_documents({})
+    print('%s docs in collection' % h)
+
+async def del_one(db):
+    coll = db.people
+    d = await coll.count_documents({})
+    print('%s docs in collection before delete' % d)
+    result = await db.information.delete_one({})
 
 
 async def del_many(db):
-    coll = db.information
+    coll = db.people
     d = await coll.count_documents({})
     print('%s docs in collection before delete' % d)
-    result = await db.information.delete_many({})
+    result = await db.people.delete_many({})
     print('%s documents after' % (await coll.count_documents({})))
 
 
@@ -54,7 +70,7 @@ async def split_doc(db):
     document = await cursor.to_list(length=1)
     for item in document:
         item['_id'] = str(item['_id'])
-    req = await db.information.insert_many(
+    req = await db.people.insert_many(
         document[0].get('items'))
     print('inserted %d docs' % (len(req.inserted_ids),))
 

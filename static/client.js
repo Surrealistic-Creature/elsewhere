@@ -1,4 +1,4 @@
-let socket = new WebSocket('ws://0.0.0.0:8000/ws');
+let socket = new WebSocket('ws://' + location.host + '/ws');
 
 document.forms.sender.onsubmit = function() {
 	let outgoingMessage = this.message.value;
