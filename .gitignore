@@ -2,3 +2,4 @@ todo.txt
 config.py
 *.json
 .vscode
+__pycache__

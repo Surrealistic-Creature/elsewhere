@@ -17,6 +17,8 @@ uvloop = "*"
 websockets = "*"
 requests = "*"
 vk-api = "*"
+sqlalchemy = "*"
+psycopg2 = "*"
 
 [packages.starlette]
 extras = [ "full",]

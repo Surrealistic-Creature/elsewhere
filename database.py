@@ -17,7 +17,7 @@ async def outload(db):
 
 async def print_people(db):
     doc_people = db.people.find({})
-    press = await doc_people.to_list(length=3)
+    press = await doc_people.to_list(length=10)
     for element in press:
         element['_id'] = str(element['_id'])
     return press
