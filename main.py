@@ -55,12 +55,24 @@ async def pushing_people(request):
     await database.split_doc(request.app.state.db)
     return JSONResponse({'message': 'ok'})
 
+
+async def importing(request):
+    await database.import_friend(request.app.state.db)
+    return JSONResponse({'message': 'ok'})
+
+async def show_db(_request):
+    database.show_postgre()
+    return JSONResponse({'message': 'ok'})
+
+
 routes = [
         Route('/', endpoint=homepage),
         Route('/vk_connect', endpoint=vk_connect),
         Route('/psh', endpoint=pushing_people),
         Route('/rm_docs', endpoint=remove_docs),
         Route('/show', endpoint=show_people),
+        Route('/import', endpoint=importing),
+        Route('/psqlsh', endpoint=show_db),
         WebSocketRoute('/ws', websocket_endpoint),
         Mount('/static', StaticFiles(directory='static'), name='static')]
 

@@ -1,5 +1,6 @@
 import pprint
 import outsource
+from postgredb import Friend, Session
 
 async def insertion(db):
     document = {'nest':'collection'}
@@ -17,7 +18,7 @@ async def outload(db):
 
 async def print_people(db):
     doc_people = db.people.find({})
-    press = await doc_people.to_list(length=10)
+    press = await doc_people.to_list(length=75)
     for element in press:
         element['_id'] = str(element['_id'])
     return press
@@ -75,3 +76,26 @@ async def split_doc(db):
     print('inserted %d docs' % (len(req.inserted_ids),))
 
 
+async def import_friend(db):
+    session = Session()
+    u = await print_people(db)
+    for friend in u:
+        pfriend = Friend(
+            first_name=friend['first_name'],
+            vk_id=friend['id'],
+            last_name=friend['last_name'],
+            sex=friend['sex'],
+            nickname=friend['nickname'],
+            domain=friend['domain']
+        )
+        session.add(pfriend)
+    session.commit()
+    session.close()
+
+
+def show_postgre():
+    session = Session()
+    users = session.query(Friend).all()
+    for user in users:
+        print(user.first_name, user.last_name, user.vk_id)
+    session.close()
