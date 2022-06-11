@@ -6,9 +6,18 @@
 		 <link rel="stylesheet" href="static/styles.css">
 	</head>
 	<body>
-		<h1 class="header">Welcome to my sandbox</h1>
+		<h1 class="header">Welcome to my sandbox {{cookie}}</h1>
 		<div>
 			<blockquote class="qouter">websockets test</blockquote>
+		</div>
+		<div class="auth">
+			<form name="auth" target="_self" action="/login_route" method="POST">
+				<label for="login">login</label>
+				<input type="text" name="login">
+				<label for="pass">pass</label>
+				<input type="text" name="pass">
+				<input type="submit" name="send">
+			</form>
 		</div>
 		<div class="dbreq">
 			<form name="sender">

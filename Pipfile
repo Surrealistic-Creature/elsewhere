@@ -19,6 +19,7 @@ requests = "*"
 vk-api = "*"
 sqlalchemy = "*"
 psycopg2 = "*"
+"svg.charts" = "*"
 
 [packages.starlette]
 extras = [ "full",]

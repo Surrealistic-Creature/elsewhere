@@ -8,10 +8,10 @@ from config import pstgr
 engine = create_engine('postgresql://{}:{}@localhost/elsewhere'.format(pstgr['login'], pstgr['pass']), echo=True)
 Base = declarative_base()
 
-#class City(Base):
+# class City(Base):
 
 
-class Friend(Base):
+class VKFriend(Base):
     __tablename__ = 'friends'
     id = Column(Integer, primary_key=True)
     first_name = Column(String)
@@ -33,10 +33,10 @@ class Friend(Base):
             self.last_name,
             self.sex,
             self.nickname,
-            self.domain
+            self.domain,
             )
 
 
 Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
-#session = Session()
+# session = Session()

@@ -1,6 +1,7 @@
 import pprint
 import outsource
-from postgredb import Friend, Session
+from postgredb import VKFriend, Session
+
 
 async def insertion(db):
     document = {'nest':'collection'}
@@ -16,6 +17,7 @@ async def outload(db):
         #print(test)
     return test
 
+
 async def print_people(db):
     doc_people = db.people.find({})
     press = await doc_people.to_list(length=75)
@@ -23,11 +25,13 @@ async def print_people(db):
         element['_id'] = str(element['_id'])
     return press
 
+
 async def do_count_docs(db):
     n = await db.information.count_documents({})
     print('%s docs in collection' % n)
     h = await db.people.count_documents({})
     print('%s docs in collection' % h)
+
 
 async def del_one(db):
     coll = db.people
@@ -61,11 +65,11 @@ async def add_document(db):
         print('error on insert')
 
 
-
-#async def modify_document():
+# async def modify_document():
 #    document = db.information.find({})
 
-#for one big document with many items
+# for one big document with many items
+
 async def split_doc(db):
     cursor = db.information.find({})
     document = await cursor.to_list(length=1)
@@ -80,7 +84,7 @@ async def import_friend(db):
     session = Session()
     u = await print_people(db)
     for friend in u:
-        pfriend = Friend(
+        pfriend = VKFriend(
             first_name=friend['first_name'],
             vk_id=friend['id'],
             last_name=friend['last_name'],
@@ -93,9 +97,31 @@ async def import_friend(db):
     session.close()
 
 
+def take_to_pstgr():
+
+    session = Session()
+
+    vkapi = outsource
+    some_info = vkapi.main_auth()
+    flist = some_info.get('items')
+    for smprsn in flist:
+        pfriend = VKFriend(
+            first_name=smprsn['first_name'],
+            vk_id=smprsn['id'],
+            last_name=smprsn['last_name'],
+            sex=smprsn['sex'],
+            nickname=smprsn['nickname'],
+            domain=smprsn['domain']
+            )
+        session.add(pfriend)
+    session.commit()
+    session.close()
+
+
 def show_postgre():
     session = Session()
-    users = session.query(Friend).all()
+    users = session.query(VKFriend).all()
     for user in users:
-        print(user.first_name, user.last_name, user.vk_id)
+        print(user.first_name, user.domain, user.last_name, user.sex, user.vk_id)
     session.close()
+    pass

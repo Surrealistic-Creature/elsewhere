@@ -3,3 +3,6 @@ config.py
 *.json
 .vscode
 __pycache__
+chart.py
+*.svg
+samples.py

@@ -1,6 +1,7 @@
 import vk_api
 from config import settings
 
+
 def auth_handler():
     key = input("Enter authentification code: ")
     remember_device = True
@@ -9,11 +10,11 @@ def auth_handler():
 
 def main_auth():
     vk_session = vk_api.VkApi(
-            login = settings['login'],
-            password = settings['password'],
+            login=settings['login'],
+            password=settings['password'],
             auth_handler=auth_handler,
-            app_id = settings['app_id'],
-            scope = settings['scope']
+            app_id=settings['app_id'],
+            scope=settings['scope']
             )
     try:
         vk_session.auth()
