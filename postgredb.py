@@ -20,6 +20,7 @@ class VKFriend(Base):
     sex = Column(Integer)
     nickname = Column(String)
     domain = Column(String)
+    bdate = Column(String)
     def __repr__(self):
         return ("Person("
             "first_name='{}',"
@@ -27,13 +28,15 @@ class VKFriend(Base):
             "last_name='{}',"
             "sex={},"
             "nickname='{}',"
-            "domain='{}')").format(
+            "domain='{}',"
+            "bdate='{}')").format(
             self.first_name,
             self.vk_id,
             self.last_name,
             self.sex,
             self.nickname,
             self.domain,
+            self.bdate
             )
 
 

@@ -111,7 +111,8 @@ def take_to_pstgr():
             last_name=smprsn['last_name'],
             sex=smprsn['sex'],
             nickname=smprsn['nickname'],
-            domain=smprsn['domain']
+            domain=smprsn['domain'],
+            bdate=smprsn.get('bdate')
             )
         session.add(pfriend)
     session.commit()
