@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 
 import uvicorn
-from motor.motor_asyncio import AsyncIOMotorClient
 from starlette.applications import Starlette
-from starlette.responses import Response, JSONResponse
-from starlette.routing import Route, Mount, WebSocketRoute
+from starlette.responses import JSONResponse
+from starlette.routing import Route, Mount
+# from motor.motor_asyncio import AsyncIOMotorClient
+# from starlette.responses import Response, JSONResponse
+# from starlette.routing import Route, Mount, WebSocketRoute
+# from jinja2 import Environment, PackageLoader, select_autoescape
+# from starlette.websockets import WebSocket
+# from starlette.endpoints import HTTPEndpoint, WebSocketEndpoint
 from starlette.templating import Jinja2Templates
-from jinja2 import Environment, PackageLoader, select_autoescape
 from starlette.staticfiles import StaticFiles
-from starlette.websockets import WebSocket
-from starlette.endpoints import HTTPEndpoint, WebSocketEndpoint
 import database
 
 
@@ -28,17 +30,17 @@ async def init_db():
 #   print(login)
 """
 
+
 async def init_db():
     database.show_postgre()
     return JSONResponse({'message': 'ok'})
 
-    
 
 async def homepage(request):
     response = templates.TemplateResponse('index.html', {
         'request': request,
         'cookie': request.cookies.get('mycookie')
-        })
+    })
     response.set_cookie(key='mycookie', value='elsewhere', path="/")
     return response
 
@@ -56,6 +58,7 @@ async def homepage(request):
             print('here')
             break
 """
+
 
 async def login_route(request):
     login = await request.form()
@@ -95,22 +98,36 @@ async def vk_pstgre(_request):
 
 
 async def show_db(_request):
-   database.show_postgre()
-   return JSONResponse({'message': 'ok'})
+    flist = database.show_postgre()
+    return JSONResponse({'friends': flist})
+
+
+async def remove_flist(_request):
+    database.remove_score()
+    flist = database.show_postgre()
+    return JSONResponse({'friends': flist})
+
+
+async def find_by_city(request):
+    city_title = request.path_params['city']
+    flist = database.get_by_city(city_title)
+    return JSONResponse({'friends': flist})
+
 
 # WebSocketRoute('/ws', websocket_endpoint),
 routes = [
-        Route('/', endpoint=homepage),
-        Route('/login_route', endpoint=login_route, methods=['POST']),
-        Route('/vk_connect', endpoint=vk_connect),
-        Route('/psh', endpoint=pushing_people),
-        Route('/rm_docs', endpoint=remove_docs),
-        Route('/show', endpoint=show_people),
-        Route('/import', endpoint=importing),
-        Route('/vkpstgr', endpoint=vk_pstgre),
-        Route('/psqlsh', endpoint=show_db),
-        
-        Mount('/static', StaticFiles(directory='static'), name='static')]
+    Route('/', endpoint=homepage),
+    Route('/login_route', endpoint=login_route, methods=['POST']),
+    Route('/vk_connect', endpoint=vk_connect),
+    Route('/psh', endpoint=pushing_people),
+    Route('/rm_docs', endpoint=remove_docs),
+    Route('/show', endpoint=show_people),
+    Route('/import', endpoint=importing),
+    Route('/vkpstgr', endpoint=vk_pstgre),
+    Route('/psqlsh', endpoint=show_db),
+    Route('/rmflst', endpoint=remove_flist),
+    Route('/filter/{city}', endpoint=find_by_city),
+    Mount('/static', StaticFiles(directory='static'), name='static')]
 
 # , on_startup=[init_db]
 app = Starlette(debug=True, routes=routes,)

@@ -10,17 +10,20 @@ def auth_handler():
 
 def main_auth():
     vk_session = vk_api.VkApi(
-            login=settings['login'],
-            password=settings['password'],
-            auth_handler=auth_handler,
-            app_id=settings['app_id'],
-            scope=settings['scope']
-            )
+        login=settings['login'],
+        password=settings['password'],
+        auth_handler=auth_handler,
+        app_id=settings['app_id'],
+        scope=settings['scope']
+    )
     try:
         vk_session.auth()
         vk = vk_session.get_api()
-        frendlist = vk.friends.get(
-                fields='domain, nickname, sex, bdate, city, country, timezone, education, relation, last_seen')
+        fields = ['domain', 'nickname', 'sex', 'bdate', 'city',
+                  'country', 'timezone', 'education', 'relation', 'last_seen']
+        fields = ", ".join(fields)
+        frendlist = vk.friends.get(fields=fields)
+
         return frendlist
     except vk_api.AuthError as error_msg:
         print(error_msg)

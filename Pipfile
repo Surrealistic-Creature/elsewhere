@@ -20,6 +20,7 @@ vk-api = "*"
 sqlalchemy = "*"
 psycopg2 = "*"
 "svg.charts" = "*"
+alembic = "*"
 
 [packages.starlette]
 extras = [ "full",]

@@ -1,10 +1,10 @@
 import pprint
 import outsource
-from postgredb import VKFriend, Session
+from postgredb import VKFriend, Session, City
 
 
 async def insertion(db):
-    document = {'nest':'collection'}
+    document = {'nest': 'collection'}
     result = await db.information.insert_one(document)
     print('result %s' % repr(result.inserted_id))
 
@@ -14,7 +14,7 @@ async def outload(db):
     test = await document.to_list(length=100)
     for element in test:
         element['_id'] = str(element['_id'])
-        #print(test)
+        # print(test)
     return test
 
 
@@ -33,36 +33,36 @@ async def do_count_docs(db):
     print('%s docs in collection' % h)
 
 
-async def del_one(db):
-    coll = db.people
-    d = await coll.count_documents({})
-    print('%s docs in collection before delete' % d)
-    result = await db.information.delete_one({})
+# async def del_one(db):
+#     coll = db.people
+#     d = await coll.count_documents({})
+#     print('%s docs in collection before delete' % d)
+#     result = await db.information.delete_one({})
 
 
-async def del_many(db):
-    coll = db.people
-    d = await coll.count_documents({})
-    print('%s docs in collection before delete' % d)
-    result = await db.people.delete_many({})
-    print('%s documents after' % (await coll.count_documents({})))
+# async def del_many(db):
+#     coll = db.people
+#     d = await coll.count_documents({})
+#     print('%s docs in collection before delete' % d)
+#     result = await db.people.delete_many({})
+#     print('%s documents after' % (await coll.count_documents({})))
 
 
-async def add_document(db):
-    vkapi = outsource
-    some_info = vkapi.main_auth()
-    try:
-        result = await db.information.insert_one(some_info)
-        try:
-            print('frendlist ok', some_info)
-        except Exception:
-            print('something went wrong on print frendlist')
-        try:
-            print('result ok', 'result %s' % repr(result.inserted_id))
-        except:
-            print('something went wrong on print !result!')
-    except Exception:
-        print('error on insert')
+# async def add_document(db):
+#     vkapi = outsource
+#     some_info = vkapi.main_auth()
+#     try:
+#         result = await db.information.insert_one(some_info)
+#         try:
+#             print('frendlist ok', some_info)
+#         except Exception:
+#             print('something went wrong on print frendlist')
+#         try:
+#             print('result ok', 'result %s' % repr(result.inserted_id))
+#         except Exception:
+#             print('something went wrong on print !result!')
+#     except Exception:
+#         print('error on insert')
 
 
 # async def modify_document():
@@ -105,6 +105,24 @@ def take_to_pstgr():
     some_info = vkapi.main_auth()
     flist = some_info.get('items')
     for smprsn in flist:
+        pprint.pprint(smprsn)
+        existed_person = session.query(VKFriend).filter(
+            VKFriend.vk_id == smprsn['id']).first()
+        if existed_person:
+            continue
+        city_id = smprsn['city']['id'] if smprsn.get('city') else None
+        if city_id is None:
+            city = None
+        else:
+            city = session.query(City).get(city_id)
+            if city is None:
+                new_city = City(
+                    id=smprsn['city']['id'],
+                    title=smprsn['city']['title']
+                    )
+                session.add(new_city)
+                session.commit()
+                city = new_city
         pfriend = VKFriend(
             first_name=smprsn['first_name'],
             vk_id=smprsn['id'],
@@ -112,17 +130,51 @@ def take_to_pstgr():
             sex=smprsn['sex'],
             nickname=smprsn['nickname'],
             domain=smprsn['domain'],
-            bdate=smprsn.get('bdate')
-            )
+            bdate=smprsn.get('bdate'),
+            city=city
+        )
         session.add(pfriend)
     session.commit()
     session.close()
 
 
+def remove_score():
+    session = Session()
+    session.query(VKFriend).delete()
+    session.commit()
+
+
 def show_postgre():
     session = Session()
     users = session.query(VKFriend).all()
+    vkfriends_list = []
     for user in users:
-        print(user.first_name, user.domain, user.last_name, user.sex, user.vk_id)
+        user_dict = {
+            "first_name": user.first_name,
+            "domain": user.domain,
+            "last_name": user.last_name,
+            "sex": user.sex,
+            "vk_id": user.vk_id,
+            "bdate": user.bdate}
+        vkfriends_list.append(user_dict)
     session.close()
-    pass
+
+    return vkfriends_list
+
+
+def get_by_city(city_title):
+    session = Session()
+    users = session.query(VKFriend).filter(
+        VKFriend.city.has(title=city_title)).all()
+    vkfriends_list = []
+    for user in users:
+        user_dict = {
+            "first_name": user.first_name,
+            "domain": user.domain,
+            "last_name": user.last_name,
+            "sex": user.sex,
+            "vk_id": user.vk_id,
+            "bdate": user.bdate}
+        vkfriends_list.append(user_dict)
+    session.close()
+    return vkfriends_list
