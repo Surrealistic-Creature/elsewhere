@@ -3,34 +3,34 @@ import outsource
 from postgredb import VKFriend, Session, City
 
 
-async def insertion(db):
-    document = {'nest': 'collection'}
-    result = await db.information.insert_one(document)
-    print('result %s' % repr(result.inserted_id))
+# async def insertion(db):
+#     document = {'nest': 'collection'}
+#     result = await db.information.insert_one(document)
+#     print('result %s' % repr(result.inserted_id))
 
 
-async def outload(db):
-    document = db.information.find({})
-    test = await document.to_list(length=100)
-    for element in test:
-        element['_id'] = str(element['_id'])
-        # print(test)
-    return test
+# async def outload(db):
+#     document = db.information.find({})
+#     test = await document.to_list(length=100)
+#     for element in test:
+#         element['_id'] = str(element['_id'])
+#         # print(test)
+#     return test
 
 
-async def print_people(db):
-    doc_people = db.people.find({})
-    press = await doc_people.to_list(length=75)
-    for element in press:
-        element['_id'] = str(element['_id'])
-    return press
+# async def print_people(db):
+#     doc_people = db.people.find({})
+#     press = await doc_people.to_list(length=75)
+#     for element in press:
+#         element['_id'] = str(element['_id'])
+#     return press
 
 
-async def do_count_docs(db):
-    n = await db.information.count_documents({})
-    print('%s docs in collection' % n)
-    h = await db.people.count_documents({})
-    print('%s docs in collection' % h)
+# async def do_count_docs(db):
+#     n = await db.information.count_documents({})
+#     print('%s docs in collection' % n)
+#     h = await db.people.count_documents({})
+#     print('%s docs in collection' % h)
 
 
 # async def del_one(db):
@@ -70,31 +70,31 @@ async def do_count_docs(db):
 
 # for one big document with many items
 
-async def split_doc(db):
-    cursor = db.information.find({})
-    document = await cursor.to_list(length=1)
-    for item in document:
-        item['_id'] = str(item['_id'])
-    req = await db.people.insert_many(
-        document[0].get('items'))
-    print('inserted %d docs' % (len(req.inserted_ids),))
+# async def split_doc(db):
+#     cursor = db.information.find({})
+#     document = await cursor.to_list(length=1)
+#     for item in document:
+#         item['_id'] = str(item['_id'])
+#     req = await db.people.insert_many(
+#         document[0].get('items'))
+#     print('inserted %d docs' % (len(req.inserted_ids),))
 
 
-async def import_friend(db):
-    session = Session()
-    u = await print_people(db)
-    for friend in u:
-        pfriend = VKFriend(
-            first_name=friend['first_name'],
-            vk_id=friend['id'],
-            last_name=friend['last_name'],
-            sex=friend['sex'],
-            nickname=friend['nickname'],
-            domain=friend['domain']
-        )
-        session.add(pfriend)
-    session.commit()
-    session.close()
+# async def import_friend(db):
+#     session = Session()
+#     u = await print_people(db)
+#     for friend in u:
+#         pfriend = VKFriend(
+#             first_name=friend['first_name'],
+#             vk_id=friend['id'],
+#             last_name=friend['last_name'],
+#             sex=friend['sex'],
+#             nickname=friend['nickname'],
+#             domain=friend['domain']
+#         )
+#         session.add(pfriend)
+#     session.commit()
+#     session.close()
 
 
 def take_to_pstgr():
@@ -160,6 +160,24 @@ def show_postgre():
     session.close()
 
     return vkfriends_list
+
+
+def show_partialy():
+    session = Session()
+    show = session.query(VKFriend).filter(
+        VKFriend.city.has(title='Москва')).all()
+    vkflist = []
+    for user in show:
+        user_dict = {
+            "first_name": user.first_name,
+            "domain": user.domain,
+            "last_name": user.last_name,
+            "sex": user.sex,
+            "vk_id": user.vk_id,
+            "bdate": user.bdate}
+        vkflist.append(user_dict)
+    session.close()
+    return vkflist
 
 
 def get_by_city(city_title):

@@ -3,13 +3,12 @@
 import uvicorn
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
-from starlette.routing import Route, Mount
+from starlette.routing import Route, Mount, WebSocketRoute
 # from motor.motor_asyncio import AsyncIOMotorClient
-# from starlette.responses import Response, JSONResponse
-# from starlette.routing import Route, Mount, WebSocketRoute
-# from jinja2 import Environment, PackageLoader, select_autoescape
-# from starlette.websockets import WebSocket
-# from starlette.endpoints import HTTPEndpoint, WebSocketEndpoint
+from starlette.responses import Response, JSONResponse
+from jinja2 import Environment, PackageLoader, select_autoescape
+from starlette.websockets import WebSocket
+from starlette.endpoints import HTTPEndpoint, WebSocketEndpoint
 from starlette.templating import Jinja2Templates
 from starlette.staticfiles import StaticFiles
 import database
@@ -44,11 +43,12 @@ async def homepage(request):
     response.set_cookie(key='mycookie', value='elsewhere', path="/")
     return response
 
+
 # переписать на postgresql
-"""async def websocket_endpoint(websocket):
+async def websocket_endpoint(websocket):
     await websocket.accept()
-    hello = await database.outload(websocket.app.state.db)
-    count = await database.do_count_docs(websocket.app.state.db)
+    hello = database.show_partialy()
+    # count = await database.do_count_docs(websocket.app.state.db)
     await websocket.send_json(hello)
     while True:
         try:
@@ -57,7 +57,6 @@ async def homepage(request):
         except Exception:
             print('here')
             break
-"""
 
 
 async def login_route(request):
@@ -65,31 +64,31 @@ async def login_route(request):
     print(login)
     return JSONResponse({'message': 'ok'})
 
+# mongodb disabled
+# async def show_people(request):
+#     show = await database.print_people(request.app.state.db)
+#     print(show)
+#     return JSONResponse({'message': 'ok'})
 
-async def show_people(request):
-    show = await database.print_people(request.app.state.db)
-    print(show)
-    return JSONResponse({'message': 'ok'})
+# mongodb disabled
+# async def remove_docs(request):
+#     await database.del_many(request.app.state.db)
+#     return JSONResponse({'message': 'ok'})
 
+# mongodb disabled
+# async def vk_connect(request):
+#     await database.add_document(request.app.state.db)
+#     return JSONResponse({'message': 'ok'})
 
-async def remove_docs(request):
-    await database.del_many(request.app.state.db)
-    return JSONResponse({'message': 'ok'})
+# mongodb disabled
+# async def pushing_people(request):
+#     await database.split_doc(request.app.state.db)
+#     return JSONResponse({'message': 'ok'})
 
-
-async def vk_connect(request):
-    await database.add_document(request.app.state.db)
-    return JSONResponse({'message': 'ok'})
-
-
-async def pushing_people(request):
-    await database.split_doc(request.app.state.db)
-    return JSONResponse({'message': 'ok'})
-
-
-async def importing(request):
-    await database.import_friend(request.app.state.db)
-    return JSONResponse({'message': 'ok'})
+# mongodb disabled
+# async def importing(request):
+#     await database.import_friend(request.app.state.db)
+#     return JSONResponse({'message': 'ok'})
 
 
 async def vk_pstgre(_request):
@@ -114,15 +113,15 @@ async def find_by_city(request):
     return JSONResponse({'friends': flist})
 
 
-# WebSocketRoute('/ws', websocket_endpoint),
 routes = [
     Route('/', endpoint=homepage),
     Route('/login_route', endpoint=login_route, methods=['POST']),
-    Route('/vk_connect', endpoint=vk_connect),
-    Route('/psh', endpoint=pushing_people),
-    Route('/rm_docs', endpoint=remove_docs),
-    Route('/show', endpoint=show_people),
-    Route('/import', endpoint=importing),
+    # Route('/vk_connect', endpoint=vk_connect),
+    # Route('/psh', endpoint=pushing_people),
+    # Route('/rm_docs', endpoint=remove_docs),
+    # Route('/show', endpoint=show_people),
+    # Route('/import', endpoint=importing),
+    WebSocketRoute('/ws', websocket_endpoint),
     Route('/vkpstgr', endpoint=vk_pstgre),
     Route('/psqlsh', endpoint=show_db),
     Route('/rmflst', endpoint=remove_flist),
