@@ -9,7 +9,7 @@ document.forms.sender.onsubmit = function() {
 
 socket.onmessage = function(event) {
   let message = event.data;
-  message = JSON.parse(message);  
+  message = JSON.stringify(message);  
   let messageElem = document.createElement('p');
   messageElem.textContent = message;
   messageElem.classList.add('ws_msg');
