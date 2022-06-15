@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-
+import json
 import uvicorn
 from starlette.applications import Starlette
 from starlette.responses import JSONResponse
 from starlette.routing import Route, Mount, WebSocketRoute
 # from motor.motor_asyncio import AsyncIOMotorClient
-from starlette.responses import Response, JSONResponse
+from starlette.responses import Response
 from jinja2 import Environment, PackageLoader, select_autoescape
 from starlette.websockets import WebSocket
 from starlette.endpoints import HTTPEndpoint, WebSocketEndpoint
@@ -48,8 +48,9 @@ async def homepage(request):
 async def websocket_endpoint(websocket):
     await websocket.accept()
     hello = database.show_partialy()
+    send_to = json.dumps(hello, ensure_ascii=False)
     # count = await database.do_count_docs(websocket.app.state.db)
-    await websocket.send_json(hello)
+    await websocket.send_text(send_to)
     while True:
         try:
             hell = await websocket.receive_text()
