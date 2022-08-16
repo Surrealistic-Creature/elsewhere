@@ -65,32 +65,6 @@ async def login_route(request):
     print(login)
     return JSONResponse({'message': 'ok'})
 
-# mongodb disabled
-# async def show_people(request):
-#     show = await database.print_people(request.app.state.db)
-#     print(show)
-#     return JSONResponse({'message': 'ok'})
-
-# mongodb disabled
-# async def remove_docs(request):
-#     await database.del_many(request.app.state.db)
-#     return JSONResponse({'message': 'ok'})
-
-# mongodb disabled
-# async def vk_connect(request):
-#     await database.add_document(request.app.state.db)
-#     return JSONResponse({'message': 'ok'})
-
-# mongodb disabled
-# async def pushing_people(request):
-#     await database.split_doc(request.app.state.db)
-#     return JSONResponse({'message': 'ok'})
-
-# mongodb disabled
-# async def importing(request):
-#     await database.import_friend(request.app.state.db)
-#     return JSONResponse({'message': 'ok'})
-
 
 async def vk_pstgre(_request):
     database.take_to_pstgr()
