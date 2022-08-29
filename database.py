@@ -1,7 +1,8 @@
 import pprint
 import outsource
-from postgredb import VKFriend, Session, City
-
+from postgredb import VKFriend, Session, City, UserEntity
+from starlette.datastructures import FormData
+from typing import Optional
 
 def take_to_pstgr():
 
@@ -102,3 +103,36 @@ def get_by_city(city_title):
         vkfriends_list.append(user_dict)
     session.close()
     return vkfriends_list
+
+
+def sign_up(form: FormData):
+    session = Session()
+    login = form.get('login')
+    password = form.get('pass')
+    username = form.get('username')
+    email = form.get('email')
+    existing_user = session.query(UserEntity).filter(
+        UserEntity.login == login).first()
+    if existing_user:
+        return "sorry, User with this name already exist"
+    else:
+        new_user = UserEntity(
+            login=login,
+            password=password,
+            username=username,
+            email=email
+            )
+        session.add(new_user)
+    session.commit()
+    session.close()
+    return "User Created"
+
+
+def sign_in(form: FormData) -> Optional[UserEntity]:
+    session = Session()
+    login = form.get('login')
+    password = form.get('pass')
+    signin = session.query(UserEntity).filter(
+        UserEntity.login == login,
+        UserEntity.password == password).first()
+    return signin

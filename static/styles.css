@@ -14,12 +14,10 @@
 	border-top-left-radius: 30px;
 	padding-block: 25px;
 	padding-left: 30px;
-	position: absolute;
 	right: -39px;
 }
 
 .dbreq {
-	position: absolute;
 	top: 25%;
 	margin-left: 100px;
 	background-color: #dbadad;
@@ -54,7 +52,6 @@
 }
 
 .ws_block {
-	position: absolute;
 	width: 600px;
 	height: 600px;
 	top: 32%;
@@ -67,5 +64,4 @@
 	font-size: 19px;
 }
 .auth {
-	position: absolute;
 }

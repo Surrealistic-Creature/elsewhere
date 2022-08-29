@@ -6,7 +6,9 @@
 		<link rel="stylesheet" href="static/styles.css">
 	</head>
 	<body>
-		<h1 class="header">Welcome to my sandbox {{cookie}}</h1>
+		<h1 class="header">Welcome to my sandbox, {% if user %}
+        {{user.login}} {% else %} Anonymous
+    {% endif %}</h1>
 		<div>
 		<blockquote class="qouter">websockets test</blockquote>
 	</div>
@@ -17,6 +19,19 @@
 			<label for="pass">pass</label>
 			<input type="text" name="pass">
 			<input type="submit" name="send">
+		</form>
+	</div>
+	<div class="sign_up">
+		<form name="sign_up" target="_self" action="/sign_up" method="POST">
+			<label for="login">login</label>
+			<input type="text" name="login">
+			<label for="email">email</label>
+			<input type="text" name="email">
+			<label for="username">username</label>
+			<input type="text" name="username">
+			<label for="pass">pass</label>
+			<input type="text" name="pass">
+			<input type="submit" value="sign_up" name="send">
 		</form>
 	</div>
 	<div class="dbreq">

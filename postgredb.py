@@ -9,6 +9,15 @@ engine = create_engine(
 Base = declarative_base()
 
 
+class UserEntity(Base):
+    __tablename__ = 'userentities'
+    id = Column(Integer, primary_key=True)
+    login = Column(String)
+    password = Column(String)
+    username = Column(String)
+    email = Column(String)
+
+
 class City(Base):
     __tablename__ = 'vkcities'
     id = Column(Integer, primary_key=True)
