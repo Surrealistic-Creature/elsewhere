@@ -80,7 +80,7 @@ async def login_route(request):
     request.app.state.logged_users[token] = user
     print(request.app.state.logged_users)
     response = JSONResponse({'message': token})
-    response.set_cookie(key='token', value=token, path="/")
+    response.set_cookie(key='token', value=token, path="/", max_age=60*60*24)
     return response
 
 
