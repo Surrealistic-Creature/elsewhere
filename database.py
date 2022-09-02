@@ -4,6 +4,7 @@ from postgredb import VKFriend, Session, City, UserEntity
 from starlette.datastructures import FormData
 from typing import Optional
 
+
 def take_to_pstgr():
 
     session = Session()
@@ -108,7 +109,11 @@ def get_by_city(city_title):
 def sign_up(form: FormData):
     session = Session()
     login = form.get('login')
+    if len(login) < 6:
+        return "strongly required login"
     password = form.get('pass')
+    if len(password) < 6:
+        return "strongly required password"
     username = form.get('username')
     email = form.get('email')
     existing_user = session.query(UserEntity).filter(
