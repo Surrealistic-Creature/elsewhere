@@ -108,10 +108,10 @@ def get_by_city(city_title):
 
 def sign_up(form: FormData):
     session = Session()
-    login = form.get('login')
+    login = form.get('login').strip()
     if len(login) < 6:
         return "strongly required login"
-    password = form.get('pass')
+    password = form.get('pass').strip()
     if len(password) < 6:
         return "strongly required password"
     username = form.get('username')
