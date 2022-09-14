@@ -58,6 +58,13 @@ async def sign_up(request):
     return JSONResponse({'message': new_user})
 
 
+async def log_out(request):
+    token = request.cookies.get('token')
+    logout = request.app.state.logged_users.pop(token)
+    print(logout)
+    return JSONResponse({'message': 'good bye!'})
+
+
 async def login_route(request):
     login = await request.form()
     try:
@@ -112,6 +119,7 @@ routes = [
     Route('/', endpoint=homepage),
     Route('/logged_user', endpoint=logged_user),
     Route('/login_route', endpoint=login_route, methods=['POST']),
+    Route('/logout', endpoint=log_out, methods=['POST']),
     Route('/sign_up', endpoint=sign_up, methods=['POST']),
     WebSocketRoute('/ws', websocket_endpoint),
     Route('/vkpstgr', endpoint=vk_pstgre),
