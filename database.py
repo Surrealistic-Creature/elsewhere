@@ -133,11 +133,21 @@ def sign_up(form: FormData):
     return "User Created"
 
 
+class SignInError(Exception):
+    pass
+
+
 def sign_in(form: FormData) -> Optional[UserEntity]:
     session = Session()
-    login = form.get('login')
-    password = form.get('pass')
+    login = form.get('login').strip()
+    if len(login) < 5:
+        raise SignInError('strongly required login')
+    password = form.get('pass').strip()
+    if len(password) < 5:
+        raise SignInError('strongly required password')
     signin = session.query(UserEntity).filter(
         UserEntity.login == login,
         UserEntity.password == password).first()
+    if signin is None:
+        raise SignInError('user not exist')
     return signin

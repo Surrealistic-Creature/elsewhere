@@ -16,19 +16,6 @@ import uuid
 
 templates = Jinja2Templates(directory='templates')
 
-"""
-async def init_db():
-    client = AsyncIOMotorClient('mongodb://localhost:27017')
-    app.state.db = client.others
-"""
-
-"""
-#   if request.cookies.get('mycookie'):
-#   login = request.query_params.get('login')
-#   password = request.query_params.get('pass')
-#   print(login)
-"""
-
 
 async def init_db():
     database.show_postgre()
@@ -73,14 +60,29 @@ async def sign_up(request):
 
 async def login_route(request):
     login = await request.form()
-    user = database.sign_in(login)
-    if user is None:
-        return JSONResponse({'message': 'sorry for what'})
+    try:
+        user = database.sign_in(login)
+    except database.SignInError as exc:
+        return JSONResponse({'message': str(exc)})
     token = str(uuid.uuid4())
     request.app.state.logged_users[token] = user
     print(request.app.state.logged_users)
     response = JSONResponse({'message': token})
     response.set_cookie(key='token', value=token, path="/", max_age=60*60*24)
+    return response
+
+
+async def logged_user(request):
+    token = request.cookies.get('token')
+    user = None
+    if token is not None:
+        user = request.app.state.logged_users.get(token)
+    response = templates.TemplateResponse('user.html', {
+        'request': request,
+        'cookie': request.cookies.get('mycookie'),
+        'user': user
+    })
+    response.set_cookie(key='mycookie', value='elsewhere', path="/")
     return response
 
 
@@ -108,13 +110,9 @@ async def find_by_city(request):
 
 routes = [
     Route('/', endpoint=homepage),
+    Route('/logged_user', endpoint=logged_user),
     Route('/login_route', endpoint=login_route, methods=['POST']),
     Route('/sign_up', endpoint=sign_up, methods=['POST']),
-    # Route('/vk_connect', endpoint=vk_connect),
-    # Route('/psh', endpoint=pushing_people),
-    # Route('/rm_docs', endpoint=remove_docs),
-    # Route('/show', endpoint=show_people),
-    # Route('/import', endpoint=importing),
     WebSocketRoute('/ws', websocket_endpoint),
     Route('/vkpstgr', endpoint=vk_pstgre),
     Route('/psqlsh', endpoint=show_db),
