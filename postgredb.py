@@ -16,6 +16,7 @@ class UserEntity(Base):
     password = Column(String)
     username = Column(String)
     email = Column(String)
+    avatar = Column(String)
 
 
 class City(Base):

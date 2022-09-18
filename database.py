@@ -151,3 +151,15 @@ def sign_in(form: FormData) -> Optional[UserEntity]:
     if signin is None:
         raise SignInError('user not exist')
     return signin
+
+
+def get_user_by_id(user_id: int) -> Optional[UserEntity]:
+    session = Session()
+    return session.query(UserEntity).get(user_id)
+
+
+def add_avatar(user_id: int, filename: str):
+    session = Session()
+    user = session.query(UserEntity).get(user_id)
+    user.avatar = filename
+    session.commit()

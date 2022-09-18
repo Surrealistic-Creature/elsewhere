@@ -1,47 +1,40 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
 		<meta charset="utf-8">
 		<title>Elsewhere</title>
-		<link rel="stylesheet" href="static/styles.css">
+		<link rel="stylesheet" href="/static/styles.css">
 	</head>
 	<body>
 		<h1 class="header">Welcome to my sandbox, {% if user %}
         {{user.login}} {% else %} Anonymous
     {% endif %}</h1>
-		<div>
-		<blockquote class="qouter">websockets test</blockquote>
-	</div>
-	<div class="auth">
-		<form name="auth" target="_self" action="/login_route" method="POST">
-			<label for="login">login</label>
-			<input type="text" name="login">
-			<label for="pass">pass</label>
-			<input type="text" name="pass">
-			<input type="submit" name="send">
+<div class="auth">
+		<form name="upload" target="_self" action="/upload_file" enctype="multipart/form-data" method="POST">
+			<label for="avatar">Avatar</label>
+			<input type="file" name="avatar">
+			<input type="submit" name="send" value="upload">
+		</form>
+	<div class="log_out">
+		<form name="log_out" target="_self" action="/logout" method="POST">
+			<input type="submit" name="send" value="logout">
 		</form>
 	</div>
-	<div class="sign_up">
-		<form name="sign_up" target="_self" action="/sign_up" method="POST">
-			<label for="login">login</label>
-			<input type="text" name="login">
-			<label for="email">email</label>
-			<input type="text" name="email">
-			<label for="username">username</label>
-			<input type="text" name="username">
-			<label for="pass">pass</label>
-			<input type="text" name="pass">
-			<input type="submit" value="sign_up" name="send">
-		</form>
-	</div>
-	<div class="dbreq">
-		<form name="sender">
-			<input type="text" name="message" class="send_some">
-			<input type="submit" name="send" class="submit_button" value="send now">
-		</form>
-	</div>
-	<div id="ws_block" class="ws_block">
-	</div>
-	<script src="/static/client.js"></script>
+
+<table>
+	<tr>
+		<th>login</th>
+		<th>username</th>
+		<th>email</th>
+		<th>avatar</th>
+	</tr>
+	<tr>
+		<td>{{wuser.login}}</td>
+		<td>{{wuser.username}}</td>
+		<td>{{wuser.email}}</td>
+		<td><img src='/uploads/avatars/{{wuser.avatar}}' width="300"></td>
+	</tr>
+</table>
 </body>
 </html>
