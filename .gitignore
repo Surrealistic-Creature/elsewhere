@@ -7,5 +7,3 @@ chart.py
 *.svg
 samples.py
 uploads/avatars/
-*.jpeg
-*.png
