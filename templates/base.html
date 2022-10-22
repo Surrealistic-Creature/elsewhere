@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<head>
+    {% block head %}
+        <link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
+        <meta charset="utf-8">
+        <title>{% block title %}{% endblock %} - Elsewhere</title>
+        <link rel="stylesheet" href="/static/styles.css">
+    {% endblock %}
+</head>
+<body>
+    {% block content %}
+    <h1 class="header">Welcome to my sandbox, {% if user %}
+    {{user.login}} {% else %} Anonymous
+    {% endif %}</h1>
+    {% endblock %}
+</body>
+</html>

@@ -1,40 +1,29 @@
-<!DOCTYPE html>
-<html>
-	<head>
-		<link rel="icon" type="image/png" href="data:image/png;base64,iVBORw0KGgo=">
-		<meta charset="utf-8">
-		<title>Elsewhere</title>
-		<link rel="stylesheet" href="/static/styles.css">
-	</head>
-	<body>
-		<h1 class="header">Welcome to my sandbox, {% if user %}
-        {{user.login}} {% else %} Anonymous
-    {% endif %}</h1>
-<div class="auth">
+{% extends "base.html" %}
+{% block content %}
+	{{ super() }}
+	<div class="auth">
 		<form name="upload" target="_self" action="/upload_file" enctype="multipart/form-data" method="POST">
 			<label for="avatar">Avatar</label>
 			<input type="file" name="avatar">
 			<input type="submit" name="send" value="upload">
 		</form>
-	<div class="log_out">
-		<form name="log_out" target="_self" action="/logout" method="POST">
-			<input type="submit" name="send" value="logout">
-		</form>
-	</div>
-
-<table>
-	<tr>
-		<th>login</th>
-		<th>username</th>
-		<th>email</th>
-		<th>avatar</th>
-	</tr>
-	<tr>
-		<td>{{wuser.login}}</td>
-		<td>{{wuser.username}}</td>
-		<td>{{wuser.email}}</td>
-		<td><img src='/uploads/avatars/{{wuser.avatar}}' width="300"></td>
-	</tr>
-</table>
-</body>
-</html>
+		<div class="log_out">
+			<form name="log_out" target="_self" action="/logout" method="POST">
+				<input type="submit" name="send" value="logout">
+			</form>
+		</div>
+		<table>
+			<tr>
+				<th>login</th>
+				<th>username</th>
+				<th>email</th>
+				<th>avatar</th>
+			</tr>
+			<tr>
+				<td>{{wuser.login}}</td>
+				<td>{{wuser.username}}</td>
+				<td>{{wuser.email}}</td>
+				<td><img src='/uploads/avatars/{{wuser.avatar}}' width="300"></td>
+			</tr>
+		</table>
+	{% endblock %}
